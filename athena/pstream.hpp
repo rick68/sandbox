@@ -42,9 +42,12 @@ namespace detail {
 	    openmode_ = mode;
 	    const char* mode_str = 0;
 
+#if defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 	    if (mode == std::ios_base::in | std::ios_base::out)
 		mode_str = "r+";
-	    else if (mode == std::ios_base::in)
+	    else
+#endif
+	    if (mode == std::ios_base::in)
 		mode_str = "r";
 	    else if (mode == std::ios_base::out)
 		mode_str = "w";
@@ -159,6 +162,7 @@ public:
 
 	bool ok = base_.popen(command, mode);
 
+#if defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 	if (mode == std::ios_base::in | std::ios_base::out)
 	{
 	    in_buff_ = total_buff_;
@@ -168,7 +172,9 @@ public:
 	    _Base::setg(in_buff_, in_buff_, in_buff_);
 	    _Base::setp(out_buff_, out_buff_ + out_buff_size_);
 	}
-	else if (mode == std::ios_base::in)
+	else
+#endif
+	if (mode == std::ios_base::in)
 	{
 	    in_buff_ = total_buff_;
 	    in_buff_size_ = total_buff_size_;
@@ -403,6 +409,7 @@ private:
 };
 
 
+#if defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
 template <typename CharT, typename Traits>
 class basic_pstream : public std::basic_iostream<CharT, Traits>
 {
@@ -457,15 +464,18 @@ private:
     basic_pstream(_Self const&);
     _Self& operator=(_Self const&);
 };
-
+#ndif
 
 typedef basic_ipstream<char, std::char_traits<char> > ipstream;
 typedef basic_opstream<char, std::char_traits<char> > opstream;
-typedef basic_pstream<char, std::char_traits<char> > pstream;
 
 typedef basic_ipstream<wchar_t, std::char_traits<wchar_t> > wipstream;
 typedef basic_opstream<wchar_t, std::char_traits<wchar_t> > wopstream;
+
+#if defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
+typedef basic_pstream<char, std::char_traits<char> > pstream;
 typedef basic_pstream<wchar_t, std::char_traits<wchar_t> > wpstream;
+#endif
 
 } // namespace athena
 
