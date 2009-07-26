@@ -464,7 +464,7 @@ private:
     basic_pstream(_Self const&);
     _Self& operator=(_Self const&);
 };
-#ndif
+#endif
 
 typedef basic_ipstream<char, std::char_traits<char> > ipstream;
 typedef basic_opstream<char, std::char_traits<char> > opstream;
